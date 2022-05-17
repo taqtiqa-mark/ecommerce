@@ -6,7 +6,7 @@ services:
     image: postgres:11
     restart: always
     environment:
-      - POSTGRES_DB=cqrs-es-sample-with-res
+      - POSTGRES_DB=res-ecommerce
       - POSTGRES_PASSWORD=secret
     ports:
       - "5432:5432"
