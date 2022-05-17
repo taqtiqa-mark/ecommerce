@@ -17,23 +17,26 @@ podman build --tag ecommerce-db .
 podman run -dt --pod servers --rm -v $(pwd):/app ecommerce-db
 popd
 podman run -it --pod servers --rm -v $(pwd):/app ecommerce /bin/bash
-root@servers:# make install
-root@servers:# # Yes, run this twice....
-root@servers:# make install
-root@servers:# pushd rails_application
-root@servers:# make dev
-root@servers:# rails db:drop
-root@servers:# rails db:create
-root@servers:# rails db:schema:dump
-root@servers:# pushd db/migrate
-root@servers:# mv -f ./../structure.sql structure.sql.bak
-root@servers:# for v in $(ls *.rb|cut -d _ -f 1| xargs echo);
-root@servers:# do
-root@servers:#     rails db:migrate VERSION=$v;
-root@servers:#     rails db:schema:dump;
-root@servers:#     mv -f ./../structure.sql V${v}_structure.sql;
-root@servers:# done
-root@servers:# rails db:drop
-root@servers:# rails db:create
+root@servers:
+make install
+# Yes, run this twice....
+make install
+pushd rails_application
+make dev
+rails db:drop
+rails db:create
+rails db:schema:dump
+pushd db/migrate
+mv -f ./../structure.sql structure.sql.bak
+i=1
+for v in $(ls *.rb|cut -d _ -f 1| xargs echo);
+do
+    rails db:migrate VERSION=$v;
+    rails db:schema:dump;
+    mv -f ./../structure.sql V${i}__${v}_structure.sql;
+    ((i++))
+done
+rails db:drop
+rails db:create
 
 ```
