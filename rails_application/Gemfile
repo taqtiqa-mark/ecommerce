@@ -2,15 +2,16 @@ source "https://rubygems.org"
 
 ruby "3.1.0"
 
-gem "rails", "~> 7.0.2", ">= 7.0.2.2"
+gem "bootsnap", ">= 1.4.4", require: false
+gem "capture_migration_sql", "~>1.0.2"
+gem "honeybadger", "~> 4.0"
+gem "kaminari"
 gem "pg", "~> 1.1"
 gem "puma", "~> 5.6"
-gem "bootsnap", ">= 1.4.4", require: false
-gem "honeybadger", "~> 4.0"
+gem "rails", "~> 7.0.2", ">= 7.0.2.2"
 gem "skylight"
-gem "tailwindcss-rails"
-gem "kaminari"
 gem "sprockets-rails"
+gem "tailwindcss-rails"
 
 group :development do
   gem "listen", "~> 3.3"

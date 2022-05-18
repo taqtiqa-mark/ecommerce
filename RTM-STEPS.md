@@ -23,20 +23,26 @@ make install
 make install
 pushd rails_application
 make dev
+skylight disable_dev_warning
 rails db:drop
 rails db:create
-rails db:schema:dump
 pushd db/migrate
-mv -f ./../structure.sql structure.sql.bak
+rm -f ./../structure.sql
+rm -f ./../migration_sql/*.sql
+# Initialize to create `schema_migrations` otherwise next migrations fail.
+rails db:migrate:up VERSION=0;
+mv -f ./../structure.sql V0__20150429224522__initialize.sql
+rm -f ./../migration_sql/0_*.sql
 i=1
-for v in $(ls *.rb|cut -d _ -f 1| xargs echo);
+for v in $(find * -type f -name '[[:digit:]]*_*.rb' ! -name '?_*'|cut -d _ -f 1| xargs echo);
 do
-    rails db:migrate VERSION=$v;
+    echo migrating $v
+    rails db:migrate:up VERSION=$v;
     rails db:schema:dump;
-    mv -f ./../structure.sql V${i}__${v}_structure.sql;
+    mv -f ./../structure.sql V${i}__${v}_schema_dump.sql;
+    mv -f ./../migration_sql/${v}_*.sql V${i}__${v}_upgrade.sql;
     ((i++))
 done
 rails db:drop
 rails db:create
-
 ```
